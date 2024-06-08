@@ -1,0 +1,6 @@
+@Fiap.CidadesInteligentes.ColetaResiduos.Api_HostAddress = http://localhost:5231
+
+GET {{Fiap.CidadesInteligentes.ColetaResiduos.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
