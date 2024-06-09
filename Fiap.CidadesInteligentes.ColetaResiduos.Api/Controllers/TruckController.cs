@@ -28,8 +28,8 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
         [Authorize(Roles = "Admin, Manager, User")]
         public ActionResult<IEnumerable<PaginationResponseModel<TruckResponseModel>>> Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var lista = _truckService.FindAll(page, pageSize);
-            var responseModel = _mapper.Map<IEnumerable<TruckResponseModel>>(lista);
+            var list = _truckService.FindAll(page, pageSize);
+            var responseModel = _mapper.Map<IEnumerable<TruckResponseModel>>(list);
             var responseModelList = new PaginationResponseModel<TruckResponseModel>
             {
                 List = responseModel,

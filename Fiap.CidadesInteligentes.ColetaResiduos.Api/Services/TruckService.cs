@@ -25,7 +25,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Services
             return _repository.FindAll(page, pageSize);
         }
 
-        public TruckModel FindById(long id)
+        public TruckModel? FindById(long id)
         {
             return _repository.FindOneBy(t => t.Id == id);
         }
@@ -35,7 +35,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Services
             _repository.Update(model);
         }
 
-        public TruckModel FindByLicensePlate(string licensePlate)
+        public TruckModel? FindByLicensePlate(string licensePlate)
         {
             return _repository.FindOneBy(t => t.LicensePlate == licensePlate);
         }
