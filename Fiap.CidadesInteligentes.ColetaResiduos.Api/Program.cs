@@ -48,14 +48,24 @@ var mapperConfig = new AutoMapper.MapperConfiguration(mc =>
 {
     mc.AllowNullCollections = true;
     mc.AllowNullDestinationValues = true;
-
+    // UserModel, UserViewModel, RegisterViewModel
     // UserModel -> UserResponseModel || UserResponseModel -> UserModel
     mc.CreateMap<UserModel, UserResponseModel>();
     mc.CreateMap<UserResponseModel, UserModel>();
-
     // UserModel -> UserViewModel || UserViewModel -> UserModel
     mc.CreateMap<UserModel, UserViewModel>();
     mc.CreateMap<UserViewModel, UserModel>();
+    // UserModel -> RegisterViewModel || RegisterViewModel -> UserModel
+    mc.CreateMap<UserModel, RegisterViewModel>();
+    mc.CreateMap<RegisterViewModel, UserModel>();
+
+    // TruckModel, TruckViewModel, TruckResponseModel
+    // TruckModel -> TruckViewModel || TruckViewModel -> TruckModel
+    mc.CreateMap<TruckModel, TruckViewModel>();
+    mc.CreateMap<TruckViewModel, TruckModel>();
+    // TruckModel -> TruckResponseModel || TruckResponseModel -> TruckModel
+    mc.CreateMap<TruckModel, TruckResponseModel>();
+    mc.CreateMap<TruckResponseModel, TruckModel>();
 });
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);

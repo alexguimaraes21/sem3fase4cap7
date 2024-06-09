@@ -5,5 +5,6 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Services
 {
     public interface ITruckService : IGenericService<TruckModel>
     {
+        public TruckModel FindByLicensePlate(string licensePlate);
     }
 }

@@ -34,5 +34,10 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Services
         {
             _repository.Update(model);
         }
+
+        public TruckModel FindByLicensePlate(string licensePlate)
+        {
+            return _repository.FindOneBy(t => t.LicensePlate == licensePlate);
+        }
     }
 }

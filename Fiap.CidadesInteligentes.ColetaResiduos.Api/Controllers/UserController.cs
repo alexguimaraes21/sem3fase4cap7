@@ -5,6 +5,7 @@ using Fiap.CidadesInteligentes.ColetaResiduos.Api.Repositories;
 using Fiap.CidadesInteligentes.ColetaResiduos.Api.ResponseModels;
 using Fiap.CidadesInteligentes.ColetaResiduos.Api.Services;
 using Fiap.CidadesInteligentes.ColetaResiduos.Api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,14 +25,16 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<UserPaginationResponseModel>> Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        [Authorize(Roles = "Admin, Manager")]
+        public ActionResult<IEnumerable<PaginationResponseModel<UserResponseModel>>> Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var users = _userService.FindAll(page, pageSize);
             var responseModelList = _mapper.Map<IEnumerable<UserResponseModel>>(users);
 
-            var responseModel = new UserPaginationResponseModel
+            var responseModel = new PaginationResponseModel<UserResponseModel>
             {
-                Users = responseModelList,
+                UrlBase = "User",
+                List = responseModelList,
                 PageSize = pageSize,
                 CurrentPage = page,
             };
@@ -39,6 +42,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public ActionResult<UserModel> Put(int id, [FromBody] UserViewModel viewModel)
         {
             var userExistente = _userService.FindById(id);
@@ -54,6 +58,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
             var userExistente = _userService.FindById(id);
@@ -68,6 +73,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Post([FromBody] UserViewModel viewModel)
         {
             var userEncontrado = _userService.FindByEmail(viewModel.Email);

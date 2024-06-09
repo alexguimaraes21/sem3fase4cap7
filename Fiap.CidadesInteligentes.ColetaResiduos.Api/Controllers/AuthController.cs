@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using AutoMapper;
 using Fiap.CidadesInteligentes.ColetaResiduos.Api.Libs;
 using Fiap.CidadesInteligentes.ColetaResiduos.Api.Models;
 using Fiap.CidadesInteligentes.ColetaResiduos.Api.Services;
@@ -14,10 +15,14 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IUserService userService, IMapper mapper)
         {
             _authService = authService;
+            _userService = userService;
+            _mapper = mapper;
         }
 
         [HttpPost("Login")]
@@ -31,6 +36,23 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
 
             var token = Util.GenerateJwtToken(authenticatedUser);
             return Ok(new { Token = token });
+        }
+
+        [HttpPost("Register")]
+        public IActionResult Register([FromBody] RegisterViewModel registerViewModel)
+        {
+            var registeredUser = _userService.FindByEmail(registerViewModel.Email);
+            if (registeredUser == null)
+            {
+                var user = _mapper.Map<UserModel>(registerViewModel);
+                user.Role = "User";
+                user.IsActive = true;
+                _userService.Add(user);
+                return Created();
+            } else
+            {
+                return BadRequest(new { Error = "Usuário já cadastrado" });
+            }
         }
     }
 }

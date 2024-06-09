@@ -61,6 +61,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Context
                 entity.Property(r => r.Description).HasColumnName("DESCRIPTION").IsRequired(true);
                 entity.Property(r => r.StartTime).HasColumnName("START_TIME").IsRequired(true);
                 entity.Property(r => r.EndTime).HasColumnName("END_TIME").IsRequired(false);
+                entity.Property(r => r.TruckId).HasColumnName("TRUCK_ID");
 
                 // Truck Foreign Key
                 entity.HasOne(r => r.Truck)
@@ -75,6 +76,8 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Context
                 entity.HasKey(c =>  c.Id);
                 entity.Property(c => c.Id).HasColumnName("ID");
                 entity.Property(c => c.DateTime).HasColumnName("DATE_TIME").IsRequired(true);
+                entity.Property(c => c.ContainerId).HasColumnName("CONTAINER_ID");
+                entity.Property(c => c.RouteId).HasColumnName("ROUTE_ID");
                 
                 // Container Foreign Key
                 entity.HasOne(c => c.Container)
