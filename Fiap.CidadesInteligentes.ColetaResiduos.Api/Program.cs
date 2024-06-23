@@ -29,11 +29,12 @@ builder.Services.AddDbContext<DatabaseContext>(
 #endregion
 
 #region Repositories
-builder.Services.AddTransient<UserRepository>();
-builder.Services.AddTransient<TruckRepository>();
-builder.Services.AddTransient<ContainerRepository>();
-builder.Services.AddTransient<CollectionRepository>();
-builder.Services.AddTransient<RouteRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITruckRepository, TruckRepository>();
+builder.Services.AddScoped<IContainerRepository, ContainerRepository>();
+builder.Services.AddScoped<ICollectionRepository, CollectionRepository>();
+builder.Services.AddScoped<IRouteRepository, RouteRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 #endregion
 
 #region Services
@@ -41,6 +42,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITruckService, TruckService>();
 builder.Services.AddScoped<IContainerService, ContainerService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<ICollectionService, CollectionService>();
 #endregion
 
 #region AutoMapper
@@ -75,6 +78,11 @@ var mapperConfig = new AutoMapper.MapperConfiguration(mc =>
     // ContainerModel -> ContainerResponseModel || ContainerResponseModel -> ContainerModel
     mc.CreateMap<ContainerModel, ContainerResponseModel>();
     mc.CreateMap<ContainerResponseModel, ContainerModel>();
+
+    /* NotificationModel, NotificationResponseModel */
+    // NotificationModel -> NotificationResponseModel || NotificationResponseModel -> NotificationModel
+    mc.CreateMap<NotificationModel, NotificationResponseModel>();
+    mc.CreateMap<NotificationResponseModel, NotificationModel>();
 });
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);

@@ -4,5 +4,6 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Services
 {
     public interface IRouteService : IGenericService<RouteModel>
     {
+        void FinalizeRoute(long id);
     }
 }

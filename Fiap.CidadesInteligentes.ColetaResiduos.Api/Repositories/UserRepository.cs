@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Repositories
 {
-    public class UserRepository : GenericRepository<UserModel>, IGenericRepository<UserModel>
+    public class UserRepository : GenericRepository<UserModel>, IUserRepository
     {
         public UserRepository(DatabaseContext context) : base(context) { }
 
@@ -27,11 +27,6 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Repositories
         public UserModel? FindUserByEmail(string email)
         {
             return FindOneBy(u => u.Email.Equals(email));
-        }
-
-        public UserModel? FindUserById(long userId)
-        {
-            return FindOneBy(u => u.Id == userId);
         }
     }
 }

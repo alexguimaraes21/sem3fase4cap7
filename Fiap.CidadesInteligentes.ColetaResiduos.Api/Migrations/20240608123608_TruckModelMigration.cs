@@ -24,6 +24,23 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Migrations
                 {
                     table.PrimaryKey("PK_NET_TRUCKS", x => x.TRUCK_ID);
                 });
+
+            // Adding Trucks
+            var sqlInsTruck1 = "INSERT INTO NET_TRUCKS (LICENSE_PLATE, CAPACITY, AVAILABLE) VALUES" +
+                "('ADG8737', 15000.0, 1)";
+            migrationBuilder.Sql(sqlInsTruck1);
+            
+            var sqlInsTruck2 = "INSERT INTO NET_TRUCKS (LICENSE_PLATE, CAPACITY, AVAILABLE) VALUES" +
+                "('FTB7157', 15000.0, 1)";
+            migrationBuilder.Sql(sqlInsTruck2);
+
+            var sqlInsTruck3 = "INSERT INTO NET_TRUCKS (LICENSE_PLATE, CAPACITY, AVAILABLE) VALUES" +
+                "('GTJ5375', 23000.0, 1)";
+            migrationBuilder.Sql(sqlInsTruck3);
+
+            var sqlInsTruck4 = "INSERT INTO NET_TRUCKS (LICENSE_PLATE, CAPACITY, AVAILABLE) VALUES" +
+                "('ENB8L24', 25000.0, 1)";
+            migrationBuilder.Sql(sqlInsTruck4);
         }
 
         /// <inheritdoc />

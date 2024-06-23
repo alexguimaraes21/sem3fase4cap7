@@ -26,7 +26,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, Manager, User")]
-        public ActionResult<IEnumerable<PaginationResponseModel<TruckResponseModel>>> Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public IActionResult Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var list = _truckService.FindAll(page, pageSize);
             var responseModel = _mapper.Map<IEnumerable<TruckResponseModel>>(list);
@@ -41,9 +41,19 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
             return Ok(responseModelList);
         }
 
+        [HttpGet("FindByLicensePlate")]
+        [Authorize(Roles = "Admin, Manager, User")]
+        public IActionResult FindByLicensePlate([FromQuery] string licensePlate)
+        {
+            var truck = _truckService.FindByLicensePlate(licensePlate);
+            if(truck == null)
+                return NotFound();
+            return Ok(truck);
+        }
+
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin, Manager, User")]
-        public ActionResult<TruckResponseModel> Get(long id)
+        public IActionResult Get(long id)
         {
             var truck = _truckService.FindById(id);
             if (truck == null)
@@ -53,7 +63,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin, Manager")]
-        public ActionResult Add([FromBody] TruckViewModel viewModel)
+        public IActionResult Add([FromBody] TruckViewModel viewModel)
         {
             var truck = _mapper.Map<TruckModel>(viewModel);
             _truckService.Add(truck);
@@ -62,7 +72,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin, Manager")]
-        public ActionResult Update(long id, [FromBody] TruckViewModel viewModel) 
+        public IActionResult Update(long id, [FromBody] TruckViewModel viewModel) 
         {
             if (viewModel.Id == id)
             {
@@ -81,7 +91,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin, Manager")]
-        public ActionResult Delete(long id)
+        public IActionResult Delete(long id)
         {
             _truckService.Delete(id);
             return NoContent();

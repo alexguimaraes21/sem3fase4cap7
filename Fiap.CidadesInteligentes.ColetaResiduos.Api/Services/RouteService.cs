@@ -1,32 +1,43 @@
 ﻿using Fiap.CidadesInteligentes.ColetaResiduos.Api.Models;
+using Fiap.CidadesInteligentes.ColetaResiduos.Api.Repositories;
 
 namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Services
 {
     public class RouteService : IRouteService
     {
+        private readonly IRouteRepository _routeRepository;
+        public RouteService(IRouteRepository routeRepository)
+        {
+            _routeRepository = routeRepository;
+        }
         public void Add(RouteModel model)
         {
-            throw new NotImplementedException();
+            _routeRepository.Add(model);
         }
 
         public void Delete(long id)
         {
-            throw new NotImplementedException();
+            _routeRepository.Delete(r => r.Id == id);
+        }
+
+        public void FinalizeRoute(long id)
+        {
+            _routeRepository.FinalizeRoute(id);
         }
 
         public IEnumerable<RouteModel> FindAll(int page = 1, int pageSize = 10)
         {
-            throw new NotImplementedException();
+            return _routeRepository.FindAll(page, pageSize);
         }
 
-        public RouteModel FindById(long id)
+        public RouteModel? FindById(long id)
         {
-            throw new NotImplementedException();
+            return _routeRepository.FindOneBy(r => r.Id == id);
         }
 
         public void Update(RouteModel model)
         {
-            throw new NotImplementedException();
+            _routeRepository.Update(model);
         }
     }
 }

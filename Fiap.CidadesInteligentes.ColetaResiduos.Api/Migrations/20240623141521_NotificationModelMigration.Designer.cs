@@ -3,6 +3,7 @@ using System;
 using Fiap.CidadesInteligentes.ColetaResiduos.Api.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 
@@ -11,9 +12,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240623141521_AddTableNotification")]
+    partial class AddTableNotification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,6 +80,38 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("NET_CONTAINERS", (string)null);
+                });
+
+            modelBuilder.Entity("Fiap.CidadesInteligentes.ColetaResiduos.Api.Models.NotificationModel", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(19)")
+                        .HasColumnName("ID");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("NUMBER(1,0)")
+                        .HasColumnName("IS_ACTIVE");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)")
+                        .HasColumnName("MESSAGE");
+
+                    b.Property<string>("NotificationType")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)")
+                        .HasColumnName("NOTIFICATION_TYPE");
+
+                    b.Property<DateTime>("ValidUntil")
+                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnName("VALID_UNTIL");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NET_NOTIFICATIONS", (string)null);
                 });
 
             modelBuilder.Entity("Fiap.CidadesInteligentes.ColetaResiduos.Api.Models.RouteModel", b =>

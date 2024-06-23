@@ -26,7 +26,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, Manager, User")]
-        public ActionResult<IEnumerable<PaginationResponseModel<ContainerResponseModel>>> Get([FromQuery] int page = 1, int pageSize = 10)
+        public IActionResult Get([FromQuery] int page = 1, int pageSize = 10)
         {
             var list = _containerService.FindAll(page, pageSize);
             var responseModel = _mapper.Map<IEnumerable<ContainerResponseModel>>(list);
@@ -43,7 +43,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
 
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin, Manager, User")]
-        public ActionResult<ContainerResponseModel> Get(long id)
+        public IActionResult Get(long id)
         {
             var container = _containerService.FindById(id);
             if (container == null)
@@ -53,7 +53,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin, Manager")]
-        public ActionResult Add([FromBody] ContainerViewModel viewModel)
+        public IActionResult Add([FromBody] ContainerViewModel viewModel)
         {
             var container = _mapper.Map<ContainerModel>(viewModel);
             _containerService.Add(container);
@@ -62,7 +62,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin, Manager")]
-        public ActionResult Update(long id, [FromBody] ContainerViewModel viewModel)
+        public IActionResult Update(long id, [FromBody] ContainerViewModel viewModel)
         {
             if (viewModel.Id == id)
             {
@@ -80,9 +80,20 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin, Manager")]
-        public ActionResult Delete(long id) 
+        public IActionResult Delete(long id) 
         {
             _containerService.Delete(id);
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        [Authorize(Roles = "Admin, Manager, User")]
+        public IActionResult atualizaContainerLevel(long id, int containerLevel)
+        {
+            var container = _containerService.FindById(id);
+            if (container == null)
+                return NotFound();
+            _containerService.UpdateCurrentLevel(id, containerLevel);
             return NoContent();
         }
     }

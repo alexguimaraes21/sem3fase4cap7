@@ -6,8 +6,8 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Services
 {
     public class AuthService : IAuthService
     {
-        public readonly UserRepository _repository;
-        public AuthService(UserRepository repository)
+        public readonly IUserRepository _repository;
+        public AuthService(IUserRepository repository)
         {
             _repository = repository;
         }

@@ -10,6 +10,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Context
         public virtual DbSet<ContainerModel> Containers { get; set; }
         public virtual DbSet<RouteModel> Routes { get; set; }
         public virtual DbSet<CollectionModel> Collections { get; set; }
+        public virtual DbSet<NotificationModel> Notifications { get; set; }
         public DatabaseContext(DbContextOptions options) : base(options)
         {
         }
@@ -90,6 +91,17 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Context
                     .WithMany()
                     .HasForeignKey(c => c.RouteId)
                     .IsRequired(true);
+            });
+
+            modelBuilder.Entity<NotificationModel>(entity =>
+            {
+                entity.ToTable("NET_NOTIFICATIONS");
+                entity.HasKey(n => n.Id);
+                entity.Property(n => n.Id).HasColumnName("ID");
+                entity.Property(n => n.NotificationType).HasColumnName("NOTIFICATION_TYPE").IsRequired(true);
+                entity.Property(n => n.Message).HasColumnName("MESSAGE").IsRequired(true);
+                entity.Property(n => n.ValidUntil).HasColumnName("VALID_UNTIL").IsRequired(true);
+                entity.Property(n => n.IsActive).HasColumnType("NUMBER(1,0)").HasColumnName("IS_ACTIVE").IsRequired();
             });
 
             base.OnModelCreating(modelBuilder);

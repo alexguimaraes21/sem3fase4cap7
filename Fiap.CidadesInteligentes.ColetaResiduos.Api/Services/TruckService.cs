@@ -5,8 +5,8 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Services
 {
     public class TruckService : ITruckService
     {
-        private readonly TruckRepository _repository;
-        public TruckService(TruckRepository repository)
+        private readonly ITruckRepository _repository;
+        public TruckService(ITruckRepository repository)
         {
             _repository = repository;
         }

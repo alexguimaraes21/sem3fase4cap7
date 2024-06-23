@@ -8,6 +8,7 @@ using Fiap.CidadesInteligentes.ColetaResiduos.Api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
 {
@@ -26,7 +27,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, Manager")]
-        public ActionResult<IEnumerable<PaginationResponseModel<UserResponseModel>>> Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public IActionResult Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var users = _userService.FindAll(page, pageSize);
             var responseModelList = _mapper.Map<IEnumerable<UserResponseModel>>(users);
@@ -41,9 +42,29 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
             return Ok(responseModel);
         }
 
+        [HttpGet("FindByEmail")]
+        [Authorize(Roles = "Admin, Manager")]
+        public IActionResult FindByEmail([FromQuery] string email)
+        {
+            var user = _userService.FindByEmail(email);
+            if(user == null) 
+                return NotFound();
+            return Ok(_mapper.Map<UserResponseModel>(user));
+        }
+
+        [HttpGet("{id}")]
+        [Authorize(Roles = "Admin, Manager")]
+        public IActionResult Get(long id)
+        {
+            var user = _userService.FindById(id);
+            if (user == null)
+                return NotFound();
+            return Ok(_mapper.Map<UserResponseModel>(user));
+        }
+
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public ActionResult<UserModel> Put(int id, [FromBody] UserViewModel viewModel)
+        public IActionResult Put(int id, [FromBody] UserViewModel viewModel)
         {
             var userExistente = _userService.FindById(id);
             if (userExistente == null) 
@@ -59,7 +80,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             var userExistente = _userService.FindById(id);
             if (userExistente == null)
@@ -74,7 +95,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public ActionResult Post([FromBody] UserViewModel viewModel)
+        public IActionResult Post([FromBody] UserViewModel viewModel)
         {
             var userEncontrado = _userService.FindByEmail(viewModel.Email);
             if (userEncontrado == null)
