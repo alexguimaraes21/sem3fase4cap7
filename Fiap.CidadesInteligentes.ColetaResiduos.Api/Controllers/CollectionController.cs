@@ -22,7 +22,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Controllers
 
         [HttpGet("FindAllScheduledCollections")]
         [Authorize(Roles = "Admin, Manager, User")]
-        public IActionResult FindAllScheduledCollections([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> FindAllScheduledCollections([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var collections = _collectionService.FindAllScheduledCollections(page, pageSize);
             if (collections == null)

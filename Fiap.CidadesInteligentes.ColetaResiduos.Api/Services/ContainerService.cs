@@ -57,8 +57,8 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Services
 
                 if(currentLevel >= 80)
                 {
-                    var amanha = DateTime.Now.AddDays(1);
-                    var proximaColeta = new DateTime(amanha.Year, amanha.Month, amanha.Day, 20, 0, 0);
+                    var tomorrow = DateTime.Now.AddDays(1);
+                    var nextCollection = new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 20, 0, 0);
 
                     var collections = _collectionRepository.FindAllScheduledCollections();
                     long[] collectionIds = null;
@@ -80,7 +80,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Services
 
                     RouteModel routeModel = new RouteModel();
                     routeModel.Description = container.Location;
-                    routeModel.StartTime = proximaColeta;
+                    routeModel.StartTime = nextCollection;
                     routeModel.TruckId = truck.Id;
                     routeModel.Truck = truck;
                     _routeRepository.Add(routeModel);
@@ -88,23 +88,23 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Api.Services
                     CollectionModel collection = new CollectionModel();
                     collection.Container = container;
                     collection.ContainerId = container.Id;
-                    collection.DateTime = proximaColeta;
+                    collection.DateTime = nextCollection;
                     collection.RouteId = routeModel.Id;
                     collection.Route = routeModel;
                     _collectionRepository.Add(collection);
 
                     NotificationModel notification = new NotificationModel();
                     notification.NotificationType = "COLLECTION_SCHEDULED_NOTIFICATION";
-                    notification.ValidUntil = proximaColeta;
-                    notification.Message = "Nova coleta de resíduos agendada para " + proximaColeta.ToString("dd/MM/yyyy HH:mm") + ". " +
+                    notification.ValidUntil = nextCollection;
+                    notification.Message = "Nova coleta de resíduos agendada para " + nextCollection.ToString("dd/MM/yyyy HH:mm") + ". " +
                         "A coleta ocorrerá no Container localizado no endereço " + container.Location;
                     notification.IsActive = true;
                     _notificationRepository.Add(notification);
 
                     NotificationModel notificationTruckDriver = new NotificationModel();
                     notificationTruckDriver.NotificationType = "TRUCK_DRIVER_NOTIFICATION";
-                    notificationTruckDriver.ValidUntil = proximaColeta;
-                    notificationTruckDriver.Message = "Nova coleta de resíduos foi agendada para " + proximaColeta.ToString("dd/MM/yyyy HH:mm") + ". " +
+                    notificationTruckDriver.ValidUntil = nextCollection;
+                    notificationTruckDriver.Message = "Nova coleta de resíduos foi agendada para " + nextCollection.ToString("dd/MM/yyyy HH:mm") + ". " +
                         "A coleta ocorrerá no Container localizado no endereço " + container.Location + " " +
                         "e será relizada pelo veículo coletor com placa " + truck.LicensePlate;
                     notificationTruckDriver.IsActive = true;
