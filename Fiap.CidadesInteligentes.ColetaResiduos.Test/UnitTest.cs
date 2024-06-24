@@ -13,6 +13,7 @@ using Moq;
 using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 
 namespace Fiap.CidadesInteligentes.ColetaResiduos.Test
 {
@@ -278,7 +279,7 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Test
             return mockSet.Object;
         }
 
-        private async Task<HttpResponseMessage> httpClient(string urlRequest)
+        private async Task<HttpResponseMessage> httpClient(string urlRequest, string httpMethod = "GET", StringContent postParams = null)
         {
             var client = _factory.CreateClient();
             var urlAuthentication = "/api/v1/Auth/Login";
@@ -287,32 +288,109 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Test
             var responseAuthenticatedObject = await responseAuthenticated.Content.ReadFromJsonAsync<AuthModel>();
             var authenticatedClient = _factory.CreateClient();
             authenticatedClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", responseAuthenticatedObject.Token);
-            return await authenticatedClient.GetAsync(urlRequest);
+            switch(httpMethod)
+            {
+                default:
+                case "GET":
+                    return await authenticatedClient.GetAsync(urlRequest);
+                case "POST":
+                    return await authenticatedClient.PostAsync(urlRequest, postParams);
+            }
+        }
+
+        [Fact]
+        public async Task AuthControllerTestStatusCode200()
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+            var urlAuthentication = "/api/v1/Auth/Login";
+            var authParams = new StringContent("{ \"email\": \"user@email.com.br\", \"password\": \"pass123\" }", Encoding.UTF8, "application/json");
+
+            // Act
+            var responseAuthenticated = await client.PostAsync(urlAuthentication, authParams);
+
+            // Assert
+            responseAuthenticated.EnsureSuccessStatusCode();
         }
 
 
         [Fact]
-        public async Task CollectionControllerTest()
+        public async Task CollectionControllerTestStatusCode200()
         {
-            var client = _factory.CreateClient();
-            
-
             // Arrange
             var request = "/api/v1/Collection";
 
             // Act
             var response = await httpClient(request);
-            //var result = await _collectionController.FindAllScheduledCollections();
-            //var resultType = result as OkObjectResult;
-            //var resultList = resultType.Value as PaginationResponseModel<CollectionModel>;
-
-
 
             // Assert
             response.EnsureSuccessStatusCode();
-            //Assert.NotNull(result);
-            //Assert.IsType<PaginationResponseModel<CollectionModel>>(resultType.Value);
-            //Assert.Equal(HttpSta)
+        }
+
+        [Fact]
+        public async Task NotificationControllerTestStatusCode200()
+        {
+            // Arrange
+            var request = "/api/v1/Notification";
+
+            // Act
+            var response = await httpClient(request);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task TruckControllerTestStatusCode200()
+        {
+            // Arrange
+            var request = "/api/v1/Truck";
+
+            // Act
+            var response = await httpClient(request);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task UserControllerTestStatusCode200()
+        {
+            // Arrange
+            var request = "/api/v1/User";
+
+            // Act
+            var response = await httpClient(request);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task ContainerControllerAddTest()
+        {
+            // Arrange
+            var request = "/api/v1/Container";
+
+            // Act
+            var postParams = new StringContent("{ \"location\": \"Rua Olivo Gomes, 1125\", \"capacity\": 8000.02, \"currentLevel\": 12 }", Encoding.UTF8, "application/json");
+            var response = await httpClient(request, "POST", postParams);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task ContainerControllerTestStatusCode200()
+        {
+            // Arrange
+            var request = "/api/v1/Container";
+
+            // Act
+            var response = await httpClient(request);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
         }
     }
 }
