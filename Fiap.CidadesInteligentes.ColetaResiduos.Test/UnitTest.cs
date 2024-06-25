@@ -293,8 +293,14 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Test
                 default:
                 case "GET":
                     return await authenticatedClient.GetAsync(urlRequest);
+                case "DELETE":
+                    return await authenticatedClient.DeleteAsync(urlRequest);
                 case "POST":
                     return await authenticatedClient.PostAsync(urlRequest, postParams);
+                case "PUT":
+                    return await authenticatedClient.PutAsync(urlRequest, postParams);
+                case "PATCH":
+                    return await authenticatedClient.PatchAsync(urlRequest, postParams);
             }
         }
 
@@ -313,6 +319,73 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Test
             responseAuthenticated.EnsureSuccessStatusCode();
         }
 
+        [Fact]
+        public async Task TruckControllerAddTest()
+        {
+            // Arrange
+            var request = "/api/v1/Truck";
+
+            // Act
+            var postParams = new StringContent("{ \"licensePlate\": \"MER5Y85\", \"capacity\": 103785.12, \"available\": true}", Encoding.UTF8, "application/json");
+            var response = await httpClient(request, "POST", postParams);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task TruckControllerTestStatusCode200()
+        {
+            // Arrange
+            var request = "/api/v1/Truck";
+
+            // Act
+            var response = await httpClient(request);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task ContainerControllerAddTest()
+        {
+            // Arrange
+            var request = "/api/v1/Container";
+
+            // Act
+            var postParams = new StringContent("{ \"location\": \"Rua Olivo Gomes, 1125\", \"capacity\": 8000.02, \"currentLevel\": 12 }", Encoding.UTF8, "application/json");
+            var response = await httpClient(request, "POST", postParams);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task ContainerControllerPatchTest()
+        {
+            // Arrange
+            var request = "/api/v1/Container/1?containerLevel=90";
+
+            // Act
+            var response = await httpClient(request, "PATCH");
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+        }
+
+
+        [Fact]
+        public async Task ContainerControllerTestStatusCode200()
+        {
+            // Arrange
+            var request = "/api/v1/Container";
+
+            // Act
+            var response = await httpClient(request);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+        }
 
         [Fact]
         public async Task CollectionControllerTestStatusCode200()
@@ -341,50 +414,10 @@ namespace Fiap.CidadesInteligentes.ColetaResiduos.Test
         }
 
         [Fact]
-        public async Task TruckControllerTestStatusCode200()
-        {
-            // Arrange
-            var request = "/api/v1/Truck";
-
-            // Act
-            var response = await httpClient(request);
-
-            // Assert
-            response.EnsureSuccessStatusCode();
-        }
-
-        [Fact]
         public async Task UserControllerTestStatusCode200()
         {
             // Arrange
             var request = "/api/v1/User";
-
-            // Act
-            var response = await httpClient(request);
-
-            // Assert
-            response.EnsureSuccessStatusCode();
-        }
-
-        [Fact]
-        public async Task ContainerControllerAddTest()
-        {
-            // Arrange
-            var request = "/api/v1/Container";
-
-            // Act
-            var postParams = new StringContent("{ \"location\": \"Rua Olivo Gomes, 1125\", \"capacity\": 8000.02, \"currentLevel\": 12 }", Encoding.UTF8, "application/json");
-            var response = await httpClient(request, "POST", postParams);
-
-            // Assert
-            response.EnsureSuccessStatusCode();
-        }
-
-        [Fact]
-        public async Task ContainerControllerTestStatusCode200()
-        {
-            // Arrange
-            var request = "/api/v1/Container";
 
             // Act
             var response = await httpClient(request);
